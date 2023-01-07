@@ -15,10 +15,15 @@ export class EventService {
     return EVENTS.find(event => event.id === id)
   }
 
-  saveEvent(event:any) {
+  saveEvent(event:IEvent) {
     event.id = 999
-    event.session = []
+    event.sessions = []
     EVENTS.push(event)
+  }
+
+  updateEvent(event:IEvent) {
+    let index = EVENTS.findIndex(x => x.id = event.id)
+    EVENTS[index] = event
   }
 }
 
