@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core'
+import { EventEmitter, Injectable } from '@angular/core'
 import { Subject } from 'rxjs'
-import { IEvent } from './event.model';
+import { IEvent, ISession } from './event.model';
 
 @Injectable()
 export class EventService {
   getEvents(): Subject<IEvent[]> {
     let subject = new Subject<IEvent[]>()
-    setTimeout(() => {subject.next(EVENTS); subject.complete(); },
+    setTimeout(() => { subject.next(EVENTS); subject.complete(); },
       500)
     return subject
   }
@@ -15,19 +15,40 @@ export class EventService {
     return EVENTS.find(event => event.id === id)
   }
 
-  saveEvent(event:IEvent) {
+  saveEvent(event: IEvent) {
     event.id = 999
     event.sessions = []
     EVENTS.push(event)
   }
 
-  updateEvent(event:IEvent) {
+  updateEvent(event: IEvent) {
     let index = EVENTS.findIndex(x => x.id = event.id)
     EVENTS[index] = event
   }
+
+  searchSessions(searchTerm: string) {
+    var term = searchTerm.toLocaleLowerCase();
+    var results: ISession[] = [];
+
+    EVENTS.forEach(event => {
+      var matchingSessions = event.sessions.filter(session =>
+        session.name.toLocaleLowerCase().indexOf(term) > -1);
+      matchingSessions = matchingSessions.map((session: any) => {
+        session.eventId = event.id;
+        return session;
+      })
+      results = results.concat(matchingSessions);
+    })
+
+    var emitter = new EventEmitter(true);
+    setTimeout(() => {
+      emitter.emit(results);
+    }, 100)
+    return emitter;
+  }
 }
 
-const EVENTS:IEvent[] = [
+const EVENTS: IEvent[] = [
   {
     id: 1,
     name: 'Angular Connect',
@@ -157,7 +178,7 @@ const EVENTS:IEvent[] = [
         abstract: `In this session, Lukas will present the 
         secret to being awesome, and how he became the President 
         of the United States through his amazing programming skills, 
-        showing how you too can be success with just attitude.`, 
+        showing how you too can be success with just attitude.`,
         voters: ['bradgreen']
       },
     ]

@@ -1,11 +1,8 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core'
+import { BrowserModule } from '@angular/platform-browser'
+import { RouterModule } from '@angular/router'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
-import { EventsAppComponent } from './events-app.component';
-import { NavBarComponent } from './nav/nav-bar.component'
-import { RouterModule } from '@angular/router';
-import { appRoutes } from './routes';
-import { Error404Component } from './errors/404.component';
 import {
   EventsListComponent,
   EventThumbnailComponent,
@@ -16,14 +13,21 @@ import {
   EventListResolver,
   CreateSessionComponent,
   SessionListComponent,
-  DurationPipe
-} from './events/index'
-import { AuthService } from './user/auth.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CollapsibleWellComponent } from './common/collapsible-well.component';
-import { Toastr, TOASTR_TOKEN } from './common/toastr.service';
+  DurationPipe,
 
-declare let toastr:Toastr
+} from './events/index'
+import { EventsAppComponent } from './events-app.component'
+import { NavBarComponent } from './nav/nav-bar.component'
+import {
+  JQ_TOKEN, TOASTR_TOKEN, Toastr, CollapsibleWellComponent, ModalTriggerDirective,
+  SimpleModalComponent,
+} from './common/index'
+import { appRoutes } from './routes'
+import { Error404Component } from './errors/404.component'
+import { AuthService } from './user/auth.service'
+
+declare let jQuery: any;
+declare let toastr: Toastr;
 
 @NgModule({
   imports: [
@@ -37,27 +41,33 @@ declare let toastr:Toastr
     EventsListComponent,
     EventThumbnailComponent,
     EventDetailsComponent,
+    NavBarComponent,
     CreateEventComponent,
     Error404Component,
     CreateSessionComponent,
     SessionListComponent,
     CollapsibleWellComponent,
-    NavBarComponent,
-    DurationPipe
+    DurationPipe,
+    ModalTriggerDirective,
+    SimpleModalComponent,
   ],
   providers: [
     EventService,
-    AuthService,
+    { provide: TOASTR_TOKEN, useValue: toastr },
+    { provide: JQ_TOKEN, useValue: jQuery },
     EventRouteActivator,
-    { provide: TOASTR_TOKEN, useValue: toastr}, 
-    EventListResolver, {
+    EventListResolver,
+    AuthService,
+    {
       provide: 'canDeactivateCreateEvent',
       useValue: checkDirtyState
-    }],
+    }
+  ],
   bootstrap: [EventsAppComponent]
 })
 export class AppModule { }
-function checkDirtyState(component: CreateEventComponent) {
+
+export function checkDirtyState(component: CreateEventComponent) {
   if (component.isDirty)
     return window.confirm('You have not saved this event, do you really want to cancel?')
   return true
