@@ -14,7 +14,9 @@ import {
   CreateSessionComponent,
   SessionListComponent,
   DurationPipe,
-
+  UpvoteComponent,
+  VoterService,
+  LocationValidator,
 } from './events/index'
 import { EventsAppComponent } from './events-app.component'
 import { NavBarComponent } from './nav/nav-bar.component'
@@ -50,6 +52,8 @@ declare let toastr: Toastr;
     DurationPipe,
     ModalTriggerDirective,
     SimpleModalComponent,
+    UpvoteComponent,
+    LocationValidator,
   ],
   providers: [
     EventService,
@@ -58,6 +62,7 @@ declare let toastr: Toastr;
     EventRouteActivator,
     EventListResolver,
     AuthService,
+    VoterService,
     {
       provide: 'canDeactivateCreateEvent',
       useValue: checkDirtyState
