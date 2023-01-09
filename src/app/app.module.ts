@@ -16,6 +16,7 @@ import {
   DurationPipe,
   UpvoteComponent,
   VoterService,
+  LocationValidator,
 } from './events/index'
 import { EventsAppComponent } from './events-app.component'
 import { NavBarComponent } from './nav/nav-bar.component'
@@ -52,6 +53,7 @@ declare let toastr: Toastr;
     ModalTriggerDirective,
     SimpleModalComponent,
     UpvoteComponent,
+    LocationValidator,
   ],
   providers: [
     EventService,
